@@ -7,8 +7,11 @@
   Provides scores for
     NCAAF (College Football, FBS Division)
     NCAAM (College Basketball. Division I)
-    NCAAM_MM (College Basketball, March Madness Torunament)
+    NCAAM_MM (College Basketball, March Madness Tournament)
     NBA (National Basketball Association)
+    NHL (National Hockey League)
+    NFL (National Football League)
+    MLB (Major League Baseball)
     Every fucking Soccer league ESPN supports
 
   You can get an idea of what sports and leagues are
@@ -29,7 +32,7 @@
   Data is polled on demand per league configured in the
   front end. Each time the front end makes a request for a
   particular league a request for JSON is made to ESPN's
-  servers.  The front end polls every two miuntes.
+  servers.  The front end polls every two minutes.
 
 */
 
@@ -38,181 +41,181 @@ const moment = require("moment-timezone");
 const parseJSON = require("json-parse-async");
 
 module.exports = {
-
   PROVIDER_NAME: "ESPN",
 
   LEAGUE_PATHS: {
-
     //North American Leagues
-    "NCAAF": "football/college-football",
-    "NBA": "basketball/nba",
-    "WNBA": "basketball/wnba",
-    "NCAAM": "basketball/mens-college-basketball",
-    "NCAAM_MM": "basketball/mens-college-basketball",
-    "NCAAW" : "basketball/womens-college-basketball/",
+    NCAAF: "football/college-football",
+    NBA: "basketball/nba",
+    WNBA: "basketball/wnba",
+    NCAAM: "basketball/mens-college-basketball",
+    NCAAM_MM: "basketball/mens-college-basketball",
+    NCAAW: "basketball/womens-college-basketball/",
+    NHL: "hockey/nhl",
+    NFL: "football/nfl",
+    MLB: "baseball/mlb",
 
     //International Soccer
-    "AFC_ASIAN_CUP": "soccer/afc.cup",
-    "AFC_ASIAN_CUP_Q": "soccer/afc.cupq",
-    "AFF_CUP": "soccer/aff.championship",
-    "AFR_NATIONS_CUP": "soccer/caf.nations",
-    "AFR_NATIONS_CUP_Q": "soccer/caf.nations_qual",
-    "AFR_NATIONS_CHAMPIONSHIP": "soccer/caf.championship",
-    "CONCACAF_GOLD_CUP": "soccer/concacaf.gold",
-    "CONCACAF_NATIONS_Q": "soccer/concacaf.nations.league_qual",
-    "CONCACAF_WOMENS_CHAMPIONSHIP": "soccer/concacaf.womens.championship",
-    "CONMEBOL_COPA_AMERICA": "soccer/conmebol.america",
-    "FIFA_CLUB_WORLD_CUP": "soccer/fifa.cwc",
-    "FIFA_CONFEDERATIONS_CUP": "soccer/fifa.confederations",
-    "FIFA_MENS_FRIENDLIES": "soccer/fifa.friendly",
-    "FIFA_MENS_OLYMPICS": "soccer/fifa.olympics",
-    "FIFA_WOMENS_FRIENDLIES": "soccer/fifa.friendly.w",
-    "FIFA_WOMENS_OLYMPICS": "soccer/fifa.w.olympics",
-    "FIFA_WOMENS_WORLD_CUP": "soccer/fifa.wwc",
-    "FIFA_WORLD_CUP": "soccer/fifa.world",
-    "FIFA_WORLD_CUP_Q_AFC": "soccer/fifa.worldq.afc",
-    "FIFA_WORLD_CUP_Q_CAF": "soccer/fifa.worldq.caf",
-    "FIFA_WORLD_CUP_Q_CONCACAF": "soccer/fifa.worldq.concacaf",
-    "FIFA_WORLD_CUP_Q_CONMEBOL": "soccer/fifa.worldq.conmebol",
-    "FIFA_WORLD_CUP_Q_OFC": "soccer/fifa.worldq.ofc",
-    "FIFA_WORLD_CUP_Q_UEFA": "soccer/fifa.worldq.uefa",
-    "FIFA_WORLD_U17": "soccer/fifa.world.u17",
-    "FIFA_WORLD_U20": "soccer/fifa.world.u20",
-    "UEFA_CHAMPIONS": "soccer/uefa.champions",
-    "UEFA_EUROPA": "soccer/uefa.europa",
-    "UEFA_EUROPEAN_CHAMPIONSHIP": "soccer/uefa.euro",
-    "UEFA_EUROPEAN_CHAMPIONSHIP_Q": "soccer/uefa.euroq",
-    "UEFA_EUROPEAN_CHAMPIONSHIP_U19": "soccer/uefa.euro.u19",
-    "UEFA_EUROPEAN_CHAMPIONSHIP_U21": "soccer/uefa.euro_u21",
-    "UEFA_NATIONS": "soccer/uefa.nations",
-    "SAFF_CHAMPIONSHIP": "soccer/afc.saff.championship",
-    "WOMENS_EUROPEAN_CHAMPIONSHIP": "soccer/uefa.weuro",
+    AFC_ASIAN_CUP: "soccer/afc.cup",
+    AFC_ASIAN_CUP_Q: "soccer/afc.cupq",
+    AFF_CUP: "soccer/aff.championship",
+    AFR_NATIONS_CUP: "soccer/caf.nations",
+    AFR_NATIONS_CUP_Q: "soccer/caf.nations_qual",
+    AFR_NATIONS_CHAMPIONSHIP: "soccer/caf.championship",
+    CONCACAF_GOLD_CUP: "soccer/concacaf.gold",
+    CONCACAF_NATIONS_Q: "soccer/concacaf.nations.league_qual",
+    CONCACAF_WOMENS_CHAMPIONSHIP: "soccer/concacaf.womens.championship",
+    CONMEBOL_COPA_AMERICA: "soccer/conmebol.america",
+    FIFA_CLUB_WORLD_CUP: "soccer/fifa.cwc",
+    FIFA_CONFEDERATIONS_CUP: "soccer/fifa.confederations",
+    FIFA_MENS_FRIENDLIES: "soccer/fifa.friendly",
+    FIFA_MENS_OLYMPICS: "soccer/fifa.olympics",
+    FIFA_WOMENS_FRIENDLIES: "soccer/fifa.friendly.w",
+    FIFA_WOMENS_OLYMPICS: "soccer/fifa.w.olympics",
+    FIFA_WOMENS_WORLD_CUP: "soccer/fifa.wwc",
+    FIFA_WORLD_CUP: "soccer/fifa.world",
+    FIFA_WORLD_CUP_Q_AFC: "soccer/fifa.worldq.afc",
+    FIFA_WORLD_CUP_Q_CAF: "soccer/fifa.worldq.caf",
+    FIFA_WORLD_CUP_Q_CONCACAF: "soccer/fifa.worldq.concacaf",
+    FIFA_WORLD_CUP_Q_CONMEBOL: "soccer/fifa.worldq.conmebol",
+    FIFA_WORLD_CUP_Q_OFC: "soccer/fifa.worldq.ofc",
+    FIFA_WORLD_CUP_Q_UEFA: "soccer/fifa.worldq.uefa",
+    FIFA_WORLD_U17: "soccer/fifa.world.u17",
+    FIFA_WORLD_U20: "soccer/fifa.world.u20",
+    UEFA_CHAMPIONS: "soccer/uefa.champions",
+    UEFA_EUROPA: "soccer/uefa.europa",
+    UEFA_EUROPEAN_CHAMPIONSHIP: "soccer/uefa.euro",
+    UEFA_EUROPEAN_CHAMPIONSHIP_Q: "soccer/uefa.euroq",
+    UEFA_EUROPEAN_CHAMPIONSHIP_U19: "soccer/uefa.euro.u19",
+    UEFA_EUROPEAN_CHAMPIONSHIP_U21: "soccer/uefa.euro_u21",
+    UEFA_NATIONS: "soccer/uefa.nations",
+    SAFF_CHAMPIONSHIP: "soccer/afc.saff.championship",
+    WOMENS_EUROPEAN_CHAMPIONSHIP: "soccer/uefa.weuro",
 
     //UK / Ireland Soccer
-    "ENG_CARABAO_CUP": "soccer/eng.league_cup",
-    "ENG_CHAMPIONSHIP": "soccer/eng.2",
-    "ENG_EFL": "soccer/eng.trophy",
-    "ENG_FA_CUP": "soccer/eng.fa",
-    "ENG_LEAGUE_1": "soccer/eng.3",
-    "ENG_LEAGUE_2": "soccer/eng.4",
-    "ENG_NATIONAL": "soccer/eng.5",
-    "ENG_PREMIERE_LEAGUE": "soccer/eng.1",
-    "IRL_PREM": "soccer/irl.1",
-    "NIR_PREM": "soccer/nir.1",
-    "SCO_CIS": "soccer/sco.cis",
-    "SCO_CHALLENGE_CUP": "soccer/sco.challenge",
-    "SCO_CHAMPIONSHIP": "soccer/sco.2",
-    "SCO_CUP": "soccer/sco.tennents",
-    "SCO_LEAGUE_1": "soccer/sco.3",
-    "SCO_LEAGUE_2": "soccer/sco.4",
-    "SCO_PREM": "soccer/sco.1",
-    "WAL_PREM": "soccer/wal.1",
+    ENG_CARABAO_CUP: "soccer/eng.league_cup",
+    ENG_CHAMPIONSHIP: "soccer/eng.2",
+    ENG_EFL: "soccer/eng.trophy",
+    ENG_FA_CUP: "soccer/eng.fa",
+    ENG_LEAGUE_1: "soccer/eng.3",
+    ENG_LEAGUE_2: "soccer/eng.4",
+    ENG_NATIONAL: "soccer/eng.5",
+    ENG_PREMIERE_LEAGUE: "soccer/eng.1",
+    IRL_PREM: "soccer/irl.1",
+    NIR_PREM: "soccer/nir.1",
+    SCO_CIS: "soccer/sco.cis",
+    SCO_CHALLENGE_CUP: "soccer/sco.challenge",
+    SCO_CHAMPIONSHIP: "soccer/sco.2",
+    SCO_CUP: "soccer/sco.tennents",
+    SCO_LEAGUE_1: "soccer/sco.3",
+    SCO_LEAGUE_2: "soccer/sco.4",
+    SCO_PREM: "soccer/sco.1",
+    WAL_PREM: "soccer/wal.1",
 
     //European Soccer
-    "AUT_BUNDESLIGA": "soccer/aut.1",
-    "BEL_DIV_A": "soccer/bel.1",
-    "DEN_SAS_LIGAEN": "soccer/den.1",
-    "ESP_COPA_DEL_REY": "soccer/esp.copa_del_rey",
-    "ESP_LALIGA": "soccer/esp.1",
-    "ESP_SEGUNDA_DIV": "soccer/esp.2",
-    "FRA_COUPE_DE_FRANCE": "soccer/fra.coupe_de_france",
-    "FRA_COUPE_DE_LA_LIGUE": "soccer/fra.coupe_de_la_ligue",
-    "FRA_LIGUE_1": "soccer/fra.1",
-    "FRA_LIGUE_2": "soccer/fra.2",
-    "GER_2_BUNDESLIGA": "soccer/ger.2",
-    "GER_BUNDESLIGA": "soccer/ger.1",
-    "GER_DFB_POKAL": "soccer/ger.dfb_pokal",
-    "GRE_SUPER_LEAGUE": "soccer/gre.1",
-    "ISR_PREMIER_LEAGUE": "soccer/isr.1",
-    "ITA_SERIE_A": "soccer/ita.1",
-    "ITA_SERIE_B": "soccer/ita.2",
-    "ITA_COPPA_ITALIA": "soccer/ita.coppa_italia",
-    "MLT_PREMIER_LEAGUE": "soccer/mlt.1",
-    "NED_EERSTE_DIVISIE": "soccer/ned.2",
-    "NED_EREDIVISIE": "soccer/ned.1",
-    "NED_KNVB_BEKER": "soccer/ned.cup",
-    "NOR_ELITESERIEN": "soccer/nor.1",
-    "POR_LIGA": "soccer/por.1",
-    "ROU_FIRST_DIV": "soccer/rou.1",
-    "RUS_PREMIER_LEAGUE": "soccer/rus.1",
-    "SUI_SUPER_LEAGUE": "soccer/sui.1",
-    "SWE_ALLSVENSKANLIGA": "soccer/swe.1",
-    "TUR_SUPER_LIG": "soccer/tur.1",
+    AUT_BUNDESLIGA: "soccer/aut.1",
+    BEL_DIV_A: "soccer/bel.1",
+    DEN_SAS_LIGAEN: "soccer/den.1",
+    ESP_COPA_DEL_REY: "soccer/esp.copa_del_rey",
+    ESP_LALIGA: "soccer/esp.1",
+    ESP_SEGUNDA_DIV: "soccer/esp.2",
+    FRA_COUPE_DE_FRANCE: "soccer/fra.coupe_de_france",
+    FRA_COUPE_DE_LA_LIGUE: "soccer/fra.coupe_de_la_ligue",
+    FRA_LIGUE_1: "soccer/fra.1",
+    FRA_LIGUE_2: "soccer/fra.2",
+    GER_2_BUNDESLIGA: "soccer/ger.2",
+    GER_BUNDESLIGA: "soccer/ger.1",
+    GER_DFB_POKAL: "soccer/ger.dfb_pokal",
+    GRE_SUPER_LEAGUE: "soccer/gre.1",
+    ISR_PREMIER_LEAGUE: "soccer/isr.1",
+    ITA_SERIE_A: "soccer/ita.1",
+    ITA_SERIE_B: "soccer/ita.2",
+    ITA_COPPA_ITALIA: "soccer/ita.coppa_italia",
+    MLT_PREMIER_LEAGUE: "soccer/mlt.1",
+    NED_EERSTE_DIVISIE: "soccer/ned.2",
+    NED_EREDIVISIE: "soccer/ned.1",
+    NED_KNVB_BEKER: "soccer/ned.cup",
+    NOR_ELITESERIEN: "soccer/nor.1",
+    POR_LIGA: "soccer/por.1",
+    ROU_FIRST_DIV: "soccer/rou.1",
+    RUS_PREMIER_LEAGUE: "soccer/rus.1",
+    SUI_SUPER_LEAGUE: "soccer/sui.1",
+    SWE_ALLSVENSKANLIGA: "soccer/swe.1",
+    TUR_SUPER_LIG: "soccer/tur.1",
 
     //South American Soccer
-    "ARG_COPA": "soccer/arg.copa",
-    "ARG_NACIONAL_B": "soccer/arg.2",
-    "ARG_PRIMERA_DIV_B": "soccer/arg.3",
-    "ARG_PRIMERA_DIV_C": "soccer/arg.4",
-    "ARG_PRIMERA_DIV_D": "soccer/arg.5",
-    "ARG_SUPERLIGA": "soccer/arg.1",
-    "BOL_LIGA_PRO": "soccer/bol.1",
-    "BRA_CAMP_CARIOCA": "soccer/bra.camp.carioca",
-    "BRA_CAMP_GAUCHO": "soccer/bra.camp.gaucho",
-    "BRA_CAMP_MINEIRO": "soccer/bra.camp.mineiro",
-    "BRA_CAMP_PAULISTA": "soccer/bra.camp.paulista",
-    "BRA_COPA": "soccer/bra.copa_do_brazil",
-    "BRA_SERIE_A": "soccer/bra.1",
-    "BRA_SERIE_B": "soccer/bra.2",
-    "BRA_SERIE_C": "soccer/bra.3",
-    "CHI_COPA": "soccer/chi.copa_chi",
-    "CHI_PRIMERA_DIV": "soccer/chi.1",
-    "COL_COPA": "soccer/col.copa",
-    "COL_PRIMERA_A": "soccer/col.1",
-    "COL_PRIMERA_B": "soccer/col.2",
-    "CONMEBOL_COPA_LIBERTADORES": "soccer/conmebol.libertadores",
-    "CONMEBOL_COPA_SUDAMERICANA": "soccer/conmebol.sudamericana",
-    "ECU_PRIMERA_A": "soccer/ecu.1",
-    "PAR_PRIMERA_DIV": "soccer/par.1",
-    "PER_PRIMERA_PRO": "soccer/per.1",
-    "URU_PRIMERA_DIV": "soccer/uru.1",
-    "VEN_PRIMERA_PRO": "soccer/ven.1",
+    ARG_COPA: "soccer/arg.copa",
+    ARG_NACIONAL_B: "soccer/arg.2",
+    ARG_PRIMERA_DIV_B: "soccer/arg.3",
+    ARG_PRIMERA_DIV_C: "soccer/arg.4",
+    ARG_PRIMERA_DIV_D: "soccer/arg.5",
+    ARG_SUPERLIGA: "soccer/arg.1",
+    BOL_LIGA_PRO: "soccer/bol.1",
+    BRA_CAMP_CARIOCA: "soccer/bra.camp.carioca",
+    BRA_CAMP_GAUCHO: "soccer/bra.camp.gaucho",
+    BRA_CAMP_MINEIRO: "soccer/bra.camp.mineiro",
+    BRA_CAMP_PAULISTA: "soccer/bra.camp.paulista",
+    BRA_COPA: "soccer/bra.copa_do_brazil",
+    BRA_SERIE_A: "soccer/bra.1",
+    BRA_SERIE_B: "soccer/bra.2",
+    BRA_SERIE_C: "soccer/bra.3",
+    CHI_COPA: "soccer/chi.copa_chi",
+    CHI_PRIMERA_DIV: "soccer/chi.1",
+    COL_COPA: "soccer/col.copa",
+    COL_PRIMERA_A: "soccer/col.1",
+    COL_PRIMERA_B: "soccer/col.2",
+    CONMEBOL_COPA_LIBERTADORES: "soccer/conmebol.libertadores",
+    CONMEBOL_COPA_SUDAMERICANA: "soccer/conmebol.sudamericana",
+    ECU_PRIMERA_A: "soccer/ecu.1",
+    PAR_PRIMERA_DIV: "soccer/par.1",
+    PER_PRIMERA_PRO: "soccer/per.1",
+    URU_PRIMERA_DIV: "soccer/uru.1",
+    VEN_PRIMERA_PRO: "soccer/ven.1",
 
     //North American Soccer
-    "CONCACAF_CHAMPIONS": "soccer/concacaf.champions",
-    "CONCACAF_LEAGUE": "soccer/concacaf.league",
-    "CRC_PRIMERA_DIV": "soccer/crc.1",
-    "GUA_LIGA_NACIONAL": "soccer/gua.1",
-    "HON_PRIMERA_DIV": "soccer/hon.1",
-    "JAM_PREMIER_LEAGUE": "soccer/jam.1",
-    "MEX_ASCENSO_MX": "soccer/mex.2",
-    "MEX_COPA_MX": "soccer/mex.copa_mx",
-    "MEX_LIGA_BANCOMER": "soccer/mex.1",
-    "SLV_PRIMERA_DIV": "soccer/slv.1",
-    "USA_MLS": "soccer/usa.1",
-    "USA_NCAA_SL_M": "soccer/usa.ncaa.m.1",
-    "USA_NCAA_SL_W": "soccer/usa.ncaa.w.1",
-    "USA_NASL": "soccer/usa.nasl",
-    "USA_NWSL": "soccer/usa.nwsl",
-    "USA_OPEN": "soccer/usa.open",
-    "USA_USL": "soccer/usa.usl.1",
+    CONCACAF_CHAMPIONS: "soccer/concacaf.champions",
+    CONCACAF_LEAGUE: "soccer/concacaf.league",
+    CRC_PRIMERA_DIV: "soccer/crc.1",
+    GUA_LIGA_NACIONAL: "soccer/gua.1",
+    HON_PRIMERA_DIV: "soccer/hon.1",
+    JAM_PREMIER_LEAGUE: "soccer/jam.1",
+    MEX_ASCENSO_MX: "soccer/mex.2",
+    MEX_COPA_MX: "soccer/mex.copa_mx",
+    MEX_LIGA_BANCOMER: "soccer/mex.1",
+    SLV_PRIMERA_DIV: "soccer/slv.1",
+    USA_MLS: "soccer/usa.1",
+    USA_NCAA_SL_M: "soccer/usa.ncaa.m.1",
+    USA_NCAA_SL_W: "soccer/usa.ncaa.w.1",
+    USA_NASL: "soccer/usa.nasl",
+    USA_NWSL: "soccer/usa.nwsl",
+    USA_OPEN: "soccer/usa.open",
+    USA_USL: "soccer/usa.usl.1",
 
     //Asian Soccer
-    "AFC_CHAMPIONS": "soccer/afc.champions",
-    "AUS_A_LEAGUE": "soccer/aus.1",
-    "CHN_SUPER_LEAGUE": "soccer/chn.1",
-    "IDN_SUPER_LEAGUE": "soccer/idn.1",
-    "IND_I_LEAGUE": "soccer/ind.2",
-    "IND_SUPER_LEAGUE": "soccer/ind.1",
-    "JPN_J_LEAGUE": "soccer/jpn.1",
-    "MYS_SUPER_LEAGUE": "soccer/mys.1",
-    "SGP_PREMIER_LEAGUE": "soccer/sgp.1",
-    "THA_PREMIER_LEAGUE": "soccer/tha.1",
+    AFC_CHAMPIONS: "soccer/afc.champions",
+    AUS_A_LEAGUE: "soccer/aus.1",
+    CHN_SUPER_LEAGUE: "soccer/chn.1",
+    IDN_SUPER_LEAGUE: "soccer/idn.1",
+    IND_I_LEAGUE: "soccer/ind.2",
+    IND_SUPER_LEAGUE: "soccer/ind.1",
+    JPN_J_LEAGUE: "soccer/jpn.1",
+    MYS_SUPER_LEAGUE: "soccer/mys.1",
+    SGP_PREMIER_LEAGUE: "soccer/sgp.1",
+    THA_PREMIER_LEAGUE: "soccer/tha.1",
 
     //African Soccer
-    "CAF_CHAMPIONS": "soccer/caf.champions",
-    "CAF_CONFED_CUP": "soccer/caf.confed",
-    "GHA_PREMIERE_LEAGUE": "soccer/gha.1",
-    "KEN_PREMIERE_LEAGUE": "soccer/ken.1",
-    "NGA_PRO_LEAGUE": "soccer/nga.1",
-    "RSA_FIRST_DIV": "soccer/rsa.2",
-    "RSA_NEDBANK_CUP": "soccer/rsa.nedbank",
-    "RSA_PREMIERSHIP": "soccer/rsa.1",
-    "RSA_TELKOM_KNOCKOUT": "soccer/rsa.telkom_knockout",
-    "UGA_SUPER_LEAGUE": "soccer/uga.1",
-    "ZAM_SUPER_LEAGUE": "soccer/zam.1",
-    "ZIM_PREMIER_LEAGUE": "soccer/zim.1",
-
+    CAF_CHAMPIONS: "soccer/caf.champions",
+    CAF_CONFED_CUP: "soccer/caf.confed",
+    GHA_PREMIERE_LEAGUE: "soccer/gha.1",
+    KEN_PREMIERE_LEAGUE: "soccer/ken.1",
+    NGA_PRO_LEAGUE: "soccer/nga.1",
+    RSA_FIRST_DIV: "soccer/rsa.2",
+    RSA_NEDBANK_CUP: "soccer/rsa.nedbank",
+    RSA_PREMIERSHIP: "soccer/rsa.1",
+    RSA_TELKOM_KNOCKOUT: "soccer/rsa.telkom_knockout",
+    UGA_SUPER_LEAGUE: "soccer/uga.1",
+    ZAM_SUPER_LEAGUE: "soccer/zam.1",
+    ZIM_PREMIER_LEAGUE: "soccer/zim.1",
   },
 
   /*
@@ -220,7 +223,6 @@ module.exports = {
     for score display patterns, instead of IFs for each league
    */
   SOCCER_LEAGUES: [
-
     //International
     "AFC_ASIAN_CUP",
     "AFC_ASIAN_CUP_Q",
@@ -383,20 +385,19 @@ module.exports = {
     "ZIM_PREMIER_LEAGUE",
   ],
 
-
-  getLeaguePath: function(league) {
+  getLeaguePath: function (league) {
     return this.LEAGUE_PATHS[league];
   },
 
-  getScores: function(league, teams, gameDate, callback) {
-
+  getScores: function (league, teams, gameDate, callback) {
     var self = this;
 
-    var url = "https://site.api.espn.com/apis/site/v2/sports/" +
+    var url =
+      "https://site.api.espn.com/apis/site/v2/sports/" +
       this.getLeaguePath(league) +
       "/scoreboard?dates=" +
-      moment(gameDate).format("YYYYMMDD") + "&limit=200";
-
+      moment(gameDate).format("YYYYMMDD") +
+      "&limit=200";
 
     /*
       by default, ESPN returns only the Top 25 ranked teams for NCAAF
@@ -416,49 +417,61 @@ module.exports = {
       url = url + "&groups=100";
     }
 
-
-    axios.get(url)
-      .then( function(response) {
-            callback(self.formatScores(league, response.data, teams));
+    axios
+      .get(url)
+      .then(function (response) {
+        callback(self.formatScores(league, response.data, teams));
       })
-      .catch( function(r_err) {
-        console.log( "[MMM-MyScoreboard] " + moment().format("D-MMM-YY HH:mm") + " ** ERROR ** Couldn't retrieve " + league + " data for provider ESPN: " + r_err );
-        console.log( "[MMM-MyScoreboard] " + url );        
-      })
-
-
+      .catch(function (r_err) {
+        console.log(
+          "[MMM-MyScoreboard] " +
+            moment().format("D-MMM-YY HH:mm") +
+            " ** ERROR ** Couldn't retrieve " +
+            league +
+            " data for provider ESPN: " +
+            r_err
+        );
+        console.log("[MMM-MyScoreboard] " + url);
+      });
   },
 
-  formatScores: function(league, data, teams) {
-
+  formatScores: function (league, data, teams) {
     // var self = this;
     var formattedGamesList = new Array();
     var localTZ = moment.tz.guess();
 
     var filteredGamesList;
-    if (teams != null) { //filter to teams list
+    if (teams != null) {
+      //filter to teams list
 
-      filteredGamesList = data.events.filter(function(game) {
-
+      filteredGamesList = data.events.filter(function (game) {
         //if "@T25" is in the teams list, it indicates to include teams ranked in the top 25
-        if (teams.indexOf("@T25") != -1 &&
-            ( (game.competitions[0].competitors[0].curatedRank.current >= 1 &&
-                game.competitions[0].competitors[0].curatedRank.current <= 25) ||
-                (game.competitions[0].competitors[1].curatedRank.current >= 1 &&
-                    game.competitions[0].competitors[1].curatedRank.current <= 25) )) {
+        if (
+          teams.indexOf("@T25") != -1 &&
+          ((game.competitions[0].competitors[0].curatedRank.current >= 1 &&
+            game.competitions[0].competitors[0].curatedRank.current <= 25) ||
+            (game.competitions[0].competitors[1].curatedRank.current >= 1 &&
+              game.competitions[0].competitors[1].curatedRank.current <= 25))
+        ) {
           return true;
         }
 
-        return teams.indexOf(game.competitions[0].competitors[0].team.abbreviation) != -1 ||
-            teams.indexOf(game.competitions[0].competitors[1].team.abbreviation) != -1;
+        return (
+          teams.indexOf(
+            game.competitions[0].competitors[0].team.abbreviation
+          ) != -1 ||
+          teams.indexOf(
+            game.competitions[0].competitors[1].team.abbreviation
+          ) != -1
+        );
       });
-
-    } else { //return all games
+    } else {
+      //return all games
       filteredGamesList = data.events;
     }
 
     //sort by start time, then by away team shortcode.
-    filteredGamesList.sort(function(a,b) {
+    filteredGamesList.sort(function (a, b) {
       var aTime = moment(a.competitions[0].date);
       var bTime = moment(b.competitions[0].date);
 
@@ -471,14 +484,15 @@ module.exports = {
       }
 
       //start times are the same.  Now sort by away team short codes
-      var aTteam = (a.competitions[0].competitors[0].homeAway == "away" ?
-          a.competitions[0].competitors[0].team.abbreviation :
-          a.competitions[0].competitors[1].team.abbreviation);
+      var aTteam =
+        a.competitions[0].competitors[0].homeAway == "away"
+          ? a.competitions[0].competitors[0].team.abbreviation
+          : a.competitions[0].competitors[1].team.abbreviation;
 
-      var bTteam = (b.competitions[0].competitors[0].homeAway == "away" ?
-          b.competitions[0].competitors[0].team.abbreviation :
-          b.competitions[0].competitors[1].team.abbreviation);
-
+      var bTteam =
+        b.competitions[0].competitors[0].homeAway == "away"
+          ? b.competitions[0].competitors[0].team.abbreviation
+          : b.competitions[0].competitors[1].team.abbreviation;
 
       if (aTteam < bTteam) {
         return -1;
@@ -488,13 +502,10 @@ module.exports = {
       }
 
       return 0;
-
     });
 
-
     //iterate through games and construct formattedGamesList
-    filteredGamesList.forEach(game => {
-
+    filteredGamesList.forEach((game) => {
       var status = [];
       var classes = [];
 
@@ -511,7 +522,7 @@ module.exports = {
       if (hTeamData.homeAway == "away") {
         hTeamData = game.competitions[0].competitors[1];
         vTeamData = game.competitions[0].competitors[0];
-      }      
+      }
 
       /*
         Not all of ESPN's status.type.id's are supported here.
@@ -520,13 +531,15 @@ module.exports = {
         see it.  These cases are handled in the 'default' block.
       */
       switch (game.status.type.id) {
-        case "0" : //TBD
+        case "0": //TBD
           gameState = 0;
           status.push("TBD");
           break;
         case "1": //scheduled
           gameState = 0;
-          status.push(moment(game.competitions[0].date).tz(localTZ).format("h:mm a"));
+          status.push(
+            moment(game.competitions[0].date).tz(localTZ).format("h:mm a")
+          );
           break;
         case "2": //in-progress
         case "21": //beginning of period
@@ -537,7 +550,7 @@ module.exports = {
         case "44": //Shootout
           gameState = 1;
           status.push(game.status.displayClock);
-          status.push(this.getPeriod(league, game.status.period));            
+          status.push(this.getPeriod(league, game.status.period));
           break;
         case "3": //final
           gameState = 2;
@@ -557,7 +570,7 @@ module.exports = {
           gameState = 0;
           status.push("Postponed");
           break;
-        case "7":  //delayed
+        case "7": //delayed
         case "17": //rain delay
           gameState = 1;
           classes.push["delay"];
@@ -583,22 +596,27 @@ module.exports = {
           break;
         case "28": //SOCCER Full Time
           gameState = 2;
-          status.push("Full Time " + this.getFinalOT(league, game.status.period));
+          status.push(
+            "Full Time " + this.getFinalOT(league, game.status.period)
+          );
           break;
         case "45": //SOCCER Final ET
         case "46": //SOCCER final score - after golden goal
           gameState = 2;
-          status.push("Full Time (ET)"); 
-          break;         
+          status.push("Full Time (ET)");
+          break;
         case "47": //Soccer Final PK
           gameState = 2;
-          status.push("Full Time (PK) " + this.getFinalPK(hTeamData,vTeamData)); 
-          break;         
+          status.push(
+            "Full Time (PK) " + this.getFinalPK(hTeamData, vTeamData)
+          );
+          break;
         default: //Anything else, treat like a game that hasn't started yet
           gameState = 0;
-          status.push(moment(game.competitions[0].date).tz(localTZ).format("h:mm a"));
+          status.push(
+            moment(game.competitions[0].date).tz(localTZ).format("h:mm a")
+          );
           break;
-
       }
 
       /*
@@ -616,9 +634,17 @@ module.exports = {
         code for basketball: SDST.
       */
 
-      if (league == "NCAAF" && hTeamData.team.abbreviation == "SDSU" && hTeamData.team.location.indexOf("South Dakota State") != -1) {
+      if (
+        league == "NCAAF" &&
+        hTeamData.team.abbreviation == "SDSU" &&
+        hTeamData.team.location.indexOf("South Dakota State") != -1
+      ) {
         hTeamData.team.abbreviation = "SDSU ";
-      } else if (league == "NCAAF" && vTeamData.team.abbreviation == "SDSU" && vTeamData.team.location.indexOf("South Dakota State") != -1) {
+      } else if (
+        league == "NCAAF" &&
+        vTeamData.team.abbreviation == "SDSU" &&
+        vTeamData.team.location.indexOf("South Dakota State") != -1
+      ) {
         vTeamData.team.abbreviation = "SDSU ";
       }
 
@@ -627,47 +653,60 @@ module.exports = {
       var vTeamLong = "";
       //For college sports, use the displayName property
       if (league == "NCAAF" || league == "NCAAM") {
-        hTeamLong = (hTeamData.team.abbreviation == undefined ? "" : hTeamData.team.abbreviation + " ") + hTeamData.team.name;
-        vTeamLong = (vTeamData.team.abbreviation == undefined ? "" : vTeamData.team.abbreviation + " ") + vTeamData.team.name;
-      } else { //use the shortDisplayName property
+        hTeamLong =
+          (hTeamData.team.abbreviation == undefined
+            ? ""
+            : hTeamData.team.abbreviation + " ") + hTeamData.team.name;
+        vTeamLong =
+          (vTeamData.team.abbreviation == undefined
+            ? ""
+            : vTeamData.team.abbreviation + " ") + vTeamData.team.name;
+      } else {
+        //use the shortDisplayName property
         hTeamLong = hTeamData.team.shortDisplayName;
         vTeamLong = vTeamData.team.shortDisplayName;
       }
 
-
       formattedGamesList.push({
         classes: classes,
         gameMode: gameState,
-        hTeam: hTeamData.team.abbreviation == undefined ? hTeamData.team.name.substring(0,4).toUpperCase() + " " : hTeamData.team.abbreviation,
-        vTeam: vTeamData.team.abbreviation == undefined ? vTeamData.team.name.substring(0,4).toUpperCase() + " " : vTeamData.team.abbreviation,
+        hTeam:
+          hTeamData.team.abbreviation == undefined
+            ? hTeamData.team.name.substring(0, 4).toUpperCase() + " "
+            : hTeamData.team.abbreviation,
+        vTeam:
+          vTeamData.team.abbreviation == undefined
+            ? vTeamData.team.name.substring(0, 4).toUpperCase() + " "
+            : vTeamData.team.abbreviation,
         hTeamLong: hTeamLong,
         vTeamLong: vTeamLong,
-        hTeamRanking: (league == "NCAAF" || league == "NCAAM") ? this.formatT25Ranking(hTeamData.curatedRank.current) : null,
-        vTeamRanking: (league == "NCAAF" || league == "NCAAM") ? this.formatT25Ranking(vTeamData.curatedRank.current) : null,
+        hTeamRanking:
+          league == "NCAAF" || league == "NCAAM"
+            ? this.formatT25Ranking(hTeamData.curatedRank.current)
+            : null,
+        vTeamRanking:
+          league == "NCAAF" || league == "NCAAM"
+            ? this.formatT25Ranking(vTeamData.curatedRank.current)
+            : null,
         hScore: parseInt(hTeamData.score),
         vScore: parseInt(vTeamData.score),
         status: status,
         hTeamLogoUrl: hTeamData.team.logo ? hTeamData.team.logo : "",
-        vTeamLogoUrl: vTeamData.team.logo ? vTeamData.team.logo : ""
+        vTeamLogoUrl: vTeamData.team.logo ? vTeamData.team.logo : "",
       });
-
     });
 
     return formattedGamesList;
-
-
-
   },
 
-  formatT25Ranking: function(rank) {
+  formatT25Ranking: function (rank) {
     if (rank >= 1 && rank <= 25) {
       return rank;
     }
     return null;
   },
 
-  getOrdinal: function(p) {
-
+  getOrdinal: function (p) {
     var mod10 = p % 10;
     var mod100 = p % 100;
 
@@ -682,36 +721,30 @@ module.exports = {
     }
 
     return p + "<sup>TH</sup>";
-
   },
 
-  getPeriod: function(league, p) {
-
+  getPeriod: function (league, p) {
     //check for overtime, otherwise return ordinal
     if (this.isSoccer(league)) {
-
       if (p > 2) {
         return "ET";
       } else {
-        return ""; //no need to indicate first or second half        
+        return ""; //no need to indicate first or second half
       }
-
     } else {
       if (p == 5) {
         return "OT";
       } else if (p > 5) {
-        return (p - 4) + "OT";
-      }      
+        return p - 4 + "OT";
+      }
     }
 
     return this.getOrdinal(p);
-
   },
 
-  getFinalOT: function(league, p) {
-
+  getFinalOT: function (league, p) {
     if (this.isSoccer(league) && p > 2) {
-      return " (ET)";    
+      return " (ET)";
     } else if (!this.isSoccer(league)) {
       if (p == 5) {
         return " (OT)";
@@ -723,13 +756,11 @@ module.exports = {
     return "";
   },
 
-  getFinalPK: function (hTeamData,vTeamData) {
+  getFinalPK: function (hTeamData, vTeamData) {
     return hTeamData.shootoutScore + "x" + vTeamData.shootoutScore;
   },
 
-  isSoccer: function(league) {
-    return (this.SOCCER_LEAGUES.indexOf(league) !== -1);
-  }
-
-
+  isSoccer: function (league) {
+    return this.SOCCER_LEAGUES.indexOf(league) !== -1;
+  },
 };
